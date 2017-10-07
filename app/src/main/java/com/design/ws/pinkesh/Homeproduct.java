@@ -7,8 +7,14 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -23,14 +29,17 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static android.R.id.list;
 
-public class Homeproduct extends Activity implements IServiceRequest {
+
+public class Homeproduct extends Activity implements IServiceRequest  {
 
 
     String responseData = "";
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private ProgressDialog dialog;
+    public EditText search;
 
     IServiceRequest serviceRequest;
     String newString;
@@ -42,6 +51,7 @@ public class Homeproduct extends Activity implements IServiceRequest {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_closed_product);
+        search = (EditText) findViewById( R.id.search);
 
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
@@ -70,8 +80,38 @@ public class Homeproduct extends Activity implements IServiceRequest {
         // set the adapter object to the Recyclerview
         recyclerView.setAdapter(mAdapter);
 
-
+        addTextListener();
         callService();
+    }
+
+    private void addTextListener() {
+
+        search.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+
+                query = query.toString().toLowerCase();
+                 List<User_closed_product>  filteredList = new ArrayList<User_closed_product>();
+
+                for (int i = 0; i < usersList.size(); i++) {
+
+                    final String text = usersList.get(i).getFirstName().toLowerCase();
+                    if (text.contains(query)) {
+
+                        filteredList.add(usersList.get(i));
+                    }
+                }
+
+                recyclerView.setLayoutManager(new LinearLayoutManager(Homeproduct.this));
+                mAdapter = new UsersclosedAdapterproduct(Homeproduct.this, filteredList);
+                recyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();  // data set changed
+            }
+        });
     }
 
 

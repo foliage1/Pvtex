@@ -100,19 +100,11 @@ public class UsersclosedAdaptersub extends
                 @Override
                 public void onClick(View view) {
 
-                                    int i=Integer.parseInt(user.getCount());
-                    if(i>0) {
-                        Intent intent = new Intent(context.getApplicationContext(), Homesubinner.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("STRING_I_NEED", user.getFirstName());
-                        context.startActivity(intent);
-                    }
-                    else
-                    {
                         Intent intent = new Intent(context.getApplicationContext(), Homeproduct.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.putExtra("STRING_I_NEED", user.getFirstName());
                         context.startActivity(intent);
 
-                    }
+
 
 
 
